@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import '/game/enemy.dart';
+import '/game/friend.dart';
 import '/game/dino_run.dart';
 import '/game/audio_manager.dart';
 import '/models/player_data.dart';
@@ -62,12 +64,14 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
 
   // Controlls how long the hit animations will be played.
   final Timer _hitTimer = Timer(1);
+  final Timer _squishTimer = Timer(.5);
 
   static const double gravity = 800;
 
   final PlayerData playerData;
 
   bool isHit = false;
+  bool isSquish = false;
 
   Dino(Image image, this.playerData)
       : super.fromFrameData(image, _animationMap);
@@ -94,6 +98,12 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
       isHit = false;
     };
 
+    /// Set the callback for [_hitTimer].
+    _squishTimer.onTick = () {
+      current = DinoAnimationStates.sprint;
+      isSquish = false;
+    };
+
     super.onMount();
   }
 
@@ -116,6 +126,7 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
     }
 
     _hitTimer.update(dt);
+    _squishTimer.update(dt);
     super.update(dt);
   }
 
@@ -124,9 +135,27 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     // Call hit only if other component is an Enemy and dino
     // is not already in hit state.
-    if ((other is Enemy) && (!isHit)) {
+    // Handle vertical collision, e.g., stop falling
+    if ((other is Enemy) && (!isHit) && (!isSquish)) {
+
+      //var otherY = other.y;
+      if ((y != 158.00) && (speedY > 0 )) {
+        if (!isSquish) {
+          //print('squish y of char is $y');
+          //print('squish other y is $otherY');
+          other.opacity = 0;
+          squish();
+        }
+      } else {
+        //print('hit y of char is $y');
+        //print('hit other y is $otherY');
+        hit();
+      }
+
+    } else if (((other is Friend) && (!isHit) && (!isSquish)) ) {
       hit();
     }
+
     super.onCollision(intersectionPoints, other);
   }
 
@@ -137,7 +166,7 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
   void jump() {
     // Jump only if dino is on ground.
     if (isOnGround) {
-      speedY = -300;
+      speedY = -250;
       current = DinoAnimationStates.idle;
       AudioManager.instance.playSfx('jump14.wav');
     }
@@ -152,6 +181,14 @@ class Dino extends SpriteAnimationGroupComponent<DinoAnimationStates>
     current = DinoAnimationStates.hit;
     _hitTimer.start();
     playerData.lives -= 1;
+  }
+
+  void squish() {
+    isSquish = true;
+    AudioManager.instance.playSfx('squish.wav');
+    current = DinoAnimationStates.sprint;
+    _squishTimer.start();
+    playerData.currentScore += 5;
   }
 
   // This method reset some of the important properties

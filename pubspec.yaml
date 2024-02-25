@@ -33,9 +33,16 @@ flutter:
     - assets/images/AngryPig/
     - assets/images/Bat/
     - assets/images/Rino/
+    - assets/images/Ghost/
+    - assets/images/Rock/
+    - assets/images/Bird/      
+    - assets/images/Snail/         
     - assets/audio/
 
   fonts:
     - family: Audiowide
       fonts:
         - asset: assets/fonts/Audiowide/Audiowide-Regular.ttf
+    - family: Kaph
+      fonts:
+        - asset: assets/fonts/Kaph/Kaph-Regular.ttf

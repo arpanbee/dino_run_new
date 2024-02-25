@@ -48,7 +48,7 @@ class PauseMenu extends StatelessWidget {
                           return Text(
                             'Score: $score',
                             style: const TextStyle(
-                                fontSize: 40, color: Colors.white),
+                                fontSize: 30, color: Colors.white),
                           );
                         },
                       ),
@@ -63,7 +63,7 @@ class PauseMenu extends StatelessWidget {
                       child: const Text(
                         'Resume',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -79,7 +79,7 @@ class PauseMenu extends StatelessWidget {
                       child: const Text(
                         'Restart',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -94,7 +94,7 @@ class PauseMenu extends StatelessWidget {
                       child: const Text(
                         'Exit',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                         ),
                       ),
                     ),

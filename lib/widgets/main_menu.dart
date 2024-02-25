@@ -13,6 +13,11 @@ class MainMenu extends StatelessWidget {
 
   // Reference to parent game.
   final DinoRun game;
+  static const gameName = "Bug Squash";
+  static const gameInfo = '''
+  Squash the invasive bugs 
+  while avoiding friendly 
+  forrest creatures.''';
 
   const MainMenu(this.game, {super.key});
 
@@ -36,9 +41,16 @@ class MainMenu extends StatelessWidget {
                 spacing: 10,
                 children: [
                   const Text(
-                    'Dino Run',
+                    gameName,
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 35,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  const Text(
+                    gameInfo,
+                    style: TextStyle(
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   ),
@@ -51,7 +63,7 @@ class MainMenu extends StatelessWidget {
                     child: const Text(
                       'Play',
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 20,
                       ),
                     ),
                   ),
@@ -63,7 +75,7 @@ class MainMenu extends StatelessWidget {
                     child: const Text(
                       'Settings',
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 20,
                       ),
                     ),
                   ),

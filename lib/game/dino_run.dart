@@ -12,6 +12,7 @@ import '/widgets/hud.dart';
 import '/models/settings.dart';
 import '/game/audio_manager.dart';
 import '/game/enemy_manager.dart';
+import '/game/friend_manager.dart';
 import '/models/player_data.dart';
 import '/widgets/pause_menu.dart';
 import '/widgets/game_over_menu.dart';
@@ -22,10 +23,15 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
 
   // List of all the image assets.
   static const _imageAssets = [
+    'MainChar_run_sprite.png',
     'DinoSprites - tard.png',
     'AngryPig/Walk (36x30).png',
     'Bat/Flying (46x30).png',
     'Rino/Run (52x34).png',
+    'Rock/Rock2_Idle (32x28).png',
+    'Ghost/Idle (44x30).png',
+    'Bird/Flying (32x32).png',
+    'Snail/Idle (38x24).png',
     'parallax/plx-1.png',
     'parallax/plx-2.png',
     'parallax/plx-3.png',
@@ -37,6 +43,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   // List of all the audio assets.
   static const _audioAssets = [
     '8BitPlatformerLoop.wav',
+    'bgmusic.wav',
     'hurt7.wav',
     'jump14.wav',
   ];
@@ -45,6 +52,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   late Settings settings;
   late PlayerData playerData;
   late EnemyManager _enemyManager;
+  late FriendManager _friendManager;
 
   Vector2 get virtualSize => camera.viewport.virtualSize;
 
@@ -64,7 +72,8 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
 
     // Start playing background music. Internally takes care
     // of checking user settings.
-    AudioManager.instance.startBgm('8BitPlatformerLoop.wav');
+    //AudioManager.instance.startBgm('8BitPlatformerLoop.wav');
+    AudioManager.instance.startBgm('bgmusic.wav');
 
     // Cache all the images.
     await images.loadAll(_imageAssets);
@@ -94,10 +103,13 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   /// and [EnemyManager] to this game.
   void startGamePlay() {
     _dino = Dino(images.fromCache('DinoSprites - tard.png'), playerData);
+    // _dino = Dino(images.fromCache('MainChar_run_sprite.png'), playerData);
     _enemyManager = EnemyManager();
+    _friendManager = FriendManager();
 
     world.add(_dino);
     world.add(_enemyManager);
+    world.add(_friendManager);
   }
 
   // This method remove all the actors from the game.
@@ -105,6 +117,8 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     _dino.removeFromParent();
     _enemyManager.removeAllEnemies();
     _enemyManager.removeFromParent();
+    _friendManager.removeAllFriends();
+    _friendManager.removeFromParent();
   }
 
   // This method reset the whole game world to initial state.
@@ -114,7 +128,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
 
     // Reset player data to inital values.
     playerData.currentScore = 0;
-    playerData.lives = 5;
+    playerData.lives = 3;
   }
 
   // This method gets called for each tick/frame of the game.
@@ -125,7 +139,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
       overlays.add(GameOverMenu.id);
       overlays.remove(Hud.id);
       pauseEngine();
-      AudioManager.instance.pauseBgm();
+      //AudioManager.instance.pauseBgm();
     }
     super.update(dt);
   }

@@ -1,16 +1,18 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
+import 'package:flutter/material.dart';
 
-import '/game/enemy.dart';
+import '/game/friend.dart';
 import '/game/dino_run.dart';
-import '/models/enemy_data.dart';
+import '/models/friend_data.dart';
 
 // This class is responsible for spawning random enemies at certain
 // interval of time depending upon players current score.
-class EnemyManager extends Component with HasGameReference<DinoRun> {
+class FriendManager extends Component with HasGameReference<DinoRun> {
   // A list to hold data for all the enemies.
-  final List<EnemyData> _data = [];
+  final List<FriendData> _data = [];
 
   // Random generator required for randomly selecting enemy type.
   final Random _random = Random();
@@ -18,34 +20,36 @@ class EnemyManager extends Component with HasGameReference<DinoRun> {
   // Timer to decide when to spawn next enemy.
   final Timer _timer = Timer(2, repeat: true);
 
-  EnemyManager() {
-    _timer.onTick = spawnRandomEnemy;
+  FriendManager() {
+    _timer.onTick = spawnRandomFriend;
   }
 
   // This method is responsible for spawning a random enemy.
-  void spawnRandomEnemy() {
+  void spawnRandomFriend() {
     /// Generate a random index within [_data] and get an [EnemyData].
     final randomIndex = _random.nextInt(_data.length);
-    final enemyData = _data.elementAt(randomIndex);
-    final enemy = Enemy(enemyData);
+    final friendData = _data.elementAt(randomIndex);
+    final friend = Friend(friendData);
 
     // Help in setting all enemies on ground.
-    enemy.anchor = Anchor.bottomLeft;
-    enemy.position = Vector2(
-      game.virtualSize.x + 128,
+    friend.anchor = Anchor.bottomLeft;
+    friend.position = Vector2(
+      game.virtualSize.x + 32,
       game.virtualSize.y - 24,
     );
 
+    friend.paint.color.brighten(0.9);
+
     // If this enemy can fly, set its y position randomly.
-    if (enemyData.canFly) {
-      final newHeight = _random.nextDouble() * 2 * enemyData.textureSize.y;
-      enemy.position.y -= newHeight;
+    if (friendData.canFly) {
+      final newHeight = _random.nextDouble() * 2 * friendData.textureSize.y;
+      friend.position.y -= newHeight;
     }
 
     // Due to the size of our viewport, we can
     // use textureSize as size for the components.
-    enemy.size = enemyData.textureSize;
-    game.world.add(enemy);
+    friend.size = friendData.textureSize;
+    game.world.add(friend);
   }
 
   @override
@@ -58,14 +62,7 @@ class EnemyManager extends Component with HasGameReference<DinoRun> {
     if (_data.isEmpty) {
       // As soon as this component is mounted, initilize all the data.
       _data.addAll([
-        EnemyData(
-          image: game.images.fromCache('Rock/Rock2_Idle (32x28).png'),
-          nFrames: 13,
-          stepTime: 0.1,
-          textureSize: Vector2(32, 28),
-          speedX: 80,
-          canFly: false,
-        ),
+        // FriendData(
         //   image: game.images.fromCache('AngryPig/Walk (36x30).png'),
         //   nFrames: 16,
         //   stepTime: 0.1,
@@ -73,22 +70,45 @@ class EnemyManager extends Component with HasGameReference<DinoRun> {
         //   speedX: 80,
         //   canFly: false,
         // ),
-        // EnemyData(
+        FriendData(
+          image: game.images.fromCache('Bird/Flying (32x32).png'),
+          nFrames: 9,
+          stepTime: 0.1,
+          textureSize: Vector2(32, 32),
+          speedX: 80,
+          canFly: true,
+        ),
+        // FriendData(
         //   image: game.images.fromCache('Bat/Flying (46x30).png'),
         //   nFrames: 7,
         //   stepTime: 0.1,
         //   textureSize: Vector2(46, 30),
-        //   speedX: 100,
-        //   canFly: false,
-        // )
-        // EnemyData(
+        //   speedX: 80,
+        //   canFly: true,
+        // ),
+        FriendData(
+          image: game.images.fromCache('Ghost/Idle (44x30).png'),
+          nFrames: 10,
+          stepTime: 0.1,
+          textureSize: Vector2(44, 30),
+          speedX: 80,
+          canFly: false,
+        ),
+        FriendData(
+          image: game.images.fromCache('Snail/Idle (38x24).png'),
+          nFrames: 15,
+          stepTime: 0.1,
+          textureSize: Vector2(38, 24),
+          speedX: 80,
+          canFly: false
+        // FriendData(
         //   image: game.images.fromCache('Rino/Run (52x34).png'),
         //   nFrames: 6,
         //   stepTime: 0.09,
         //   textureSize: Vector2(52, 34),
-        //   speedX: 150,
+        //   speedX: 80,
         //   canFly: false,
-        // ),
+        ),
       ]);
     }
     _timer.start();
@@ -101,10 +121,10 @@ class EnemyManager extends Component with HasGameReference<DinoRun> {
     super.update(dt);
   }
 
-  void removeAllEnemies() {
-    final enemies = game.world.children.whereType<Enemy>();
-    for (var enemy in enemies) {
-      enemy.removeFromParent();
+  void removeAllFriends() {
+    final friends = game.world.children.whereType<Friend>();
+    for (var friend in friends) {
+      friend.removeFromParent();
     }
   }
 }

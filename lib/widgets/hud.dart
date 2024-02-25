@@ -55,7 +55,7 @@ class Hud extends StatelessWidget {
                 game.overlays.remove(Hud.id);
                 game.overlays.add(PauseMenu.id);
                 game.pauseEngine();
-                AudioManager.instance.pauseBgm();
+                //AudioManager.instance.pauseBgm();
               },
               child: const Icon(Icons.pause, color: Colors.white),
             ),
@@ -63,7 +63,7 @@ class Hud extends StatelessWidget {
               selector: (_, playerData) => playerData.lives,
               builder: (_, lives, __) {
                 return Row(
-                  children: List.generate(5, (index) {
+                  children: List.generate(3, (index) {
                     if (index < lives) {
                       return const Icon(
                         Icons.favorite,

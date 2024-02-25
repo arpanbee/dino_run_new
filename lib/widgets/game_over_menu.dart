@@ -43,7 +43,7 @@ class GameOverMenu extends StatelessWidget {
                   children: [
                     const Text(
                       'Game Over',
-                      style: TextStyle(fontSize: 40, color: Colors.white),
+                      style: TextStyle(fontSize: 30, color: Colors.amber),
                     ),
                     Selector<PlayerData, int>(
                       selector: (_, playerData) => playerData.currentScore,
@@ -51,7 +51,7 @@ class GameOverMenu extends StatelessWidget {
                         return Text(
                           'You Score: $score',
                           style: const TextStyle(
-                              fontSize: 40, color: Colors.white),
+                              fontSize: 20, color: Colors.white),
                         );
                       },
                     ),
@@ -59,23 +59,24 @@ class GameOverMenu extends StatelessWidget {
                       child: const Text(
                         'Restart',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                         ),
                       ),
                       onPressed: () {
                         game.overlays.remove(GameOverMenu.id);
                         game.overlays.add(Hud.id);
+                        //game.overlays.add(MainMenu.id);
                         game.resumeEngine();
                         game.reset();
                         game.startGamePlay();
-                        AudioManager.instance.resumeBgm();
+                        //AudioManager.instance.resumeBgm();
                       },
                     ),
                     ElevatedButton(
                       child: const Text(
                         'Exit',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                         ),
                       ),
                       onPressed: () {
@@ -83,7 +84,7 @@ class GameOverMenu extends StatelessWidget {
                         game.overlays.add(MainMenu.id);
                         game.resumeEngine();
                         game.reset();
-                        AudioManager.instance.resumeBgm();
+                        //AudioManager.instance.resumeBgm();
                       },
                     ),
                   ],
